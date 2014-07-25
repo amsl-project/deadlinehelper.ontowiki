@@ -70,12 +70,13 @@ class DeadlinehelperModule extends OntoWiki_Module
                     continue;
                 }
 
+                $url->setParam('r', $property['subject']);
+
                 if ($date > strtotime("now")) {
                     $data[] = array ('subjectTitle'   => $titleHelper->getTitle($property['subject']),
-                                     'subjectUrl'     => $url->setParam('r', $property['subject']),
-                                     'predicateTitle' => $titleHelper->getTitle($property['property']),
-                                     'predicateUrl'   => $url->setParam('r', $property['property']),
-                                     'value'          => $property['value']);
+                                'subjectUrl'     => (string)$url,
+                                'predicateTitle' => $titleHelper->getTitle($property['property']),
+                                'value'          => $property['value']);
                     $found = true;
                 }
             }
