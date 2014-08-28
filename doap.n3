@@ -22,7 +22,27 @@
   owconfig:hasModule :DeadlineHelper ;
 
   owconfig:registeredAt <http://extensions.ontowiki.net/repository> ;
-  doap:release :v1 .
+  doap:release :v1 ;
+  owconfig:config [
+      a owconfig:Config;
+      owconfig:id "properties";
+      owconfig:config [
+          a owconfig:Config;
+          owconfig:id "ExampleDateProperty";
+          :property <http://example.org/remindeDate> ;
+      ]
+  ];
+
+  owconfig:config [
+      a owconfig:Config;
+      owconfig:id "dayOffset";
+      :value "9999" ;
+  ];
+ :dontShowController (
+      "error"
+      "debug"
+      "module"
+ ) .
 
 
 :v1 a doap:Version ;
@@ -43,17 +63,3 @@
   rdfs:label "Deadline Helper" ;
   owconfig:priority "10" .
 
-:deadlinehelper owconfig:config [
-      a owconfig:Config;
-      owconfig:id "properties";
-      owconfig:config [
-          a owconfig:Config;
-          owconfig:id "Example Date Property";
-          :property <http://example.org/remindeDate> ;
-    ]
-];
- :dontShowController (
-      "error"
-      "debug"
-      "module"
- ) .
