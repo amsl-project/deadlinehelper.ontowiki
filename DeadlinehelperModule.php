@@ -28,23 +28,34 @@ class DeadlinehelperModule extends OntoWiki_Module
      */
     public function getContents()
     {
-        $today = new DateTime("now");
+        $minDate = new DateTime("now");
         $maxDate = new DateTime("now");
+
+        if (isset($this->_privateConfig->dayNegOffset->value)) {
+            $dayNegOffset = intval($this->_privateConfig->dayNegOffset->value);
+        } else {
+            $dayNegOffset = 0;
+        }
+
+        if ($dayNegOffset <= 0) {
+            $minDate->setDate(-9999, 1, 1);
+        } else {
+            $interval = DateInterval::createfromdatestring("-$dayNegOffset day");
+            $minDate->add($interval);
+        }
 
         if (isset($this->_privateConfig->dayOffset->value)) {
             $dayOffset = intval($this->_privateConfig->dayOffset->value);
         } else {
-            $dayOffset = 50;
+            $dayOffset = 0;
         }
 
         if ($dayOffset <= 0) {
-            // Add some years in case no valid offset found in config
-            $interval = DateInterval::createfromdatestring('+211 year');
+            $maxDate->setDate(9999, 1, 1);
         } else {
             $interval = DateInterval::createfromdatestring("+$dayOffset day");
+            $maxDate->add($interval);
         }
-
-        $maxDate->add($interval);
 
         $properties = array();
         if (isset($this->_privateConfig->properties)) {
@@ -91,7 +102,7 @@ class DeadlinehelperModule extends OntoWiki_Module
 
                 $url->setParam('r', $property['subject']);
 
-                if ($date > $today && $date < $maxDate) {
+                if ($date > $minDate && $date < $maxDate) {
                     $data[] = array ('subjectTitle'   => $titleHelper->getTitle($property['subject']),
                                 'subjectUrl'     => (string)$url,
                                 'predicateTitle' => $titleHelper->getTitle($property['property']),

@@ -32,11 +32,15 @@
           :property <http://example.org/remindeDate> ;
       ]
   ];
-
+  owconfig:config [
+      a owconfig:Config;
+      owconfig:id "dayNegOffset";
+      :value "0" ;
+  ];
   owconfig:config [
       a owconfig:Config;
       owconfig:id "dayOffset";
-      :value "9999" ;
+      :value "0" ;
   ];
  :dontShowController (
       "error"
