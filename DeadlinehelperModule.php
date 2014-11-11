@@ -51,7 +51,7 @@ class DeadlinehelperModule extends OntoWiki_Module
         }
 
         if ($dayOffset <= 0) {
-            $maxDate->setDate(9999, 1, 1);
+            $maxDate->setDate(9999, 12, 31);
         } else {
             $interval = DateInterval::createfromdatestring("+$dayOffset day");
             $maxDate->add($interval);
