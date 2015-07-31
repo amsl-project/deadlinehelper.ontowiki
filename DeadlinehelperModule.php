@@ -1,15 +1,19 @@
 <?php
-
 /**
+ * This file is part of the {@link http://amsl.technology amsl} project.
+ *
+ * @author Norman Radtke
+ * @copyright Copyright (c) 2015, {@link http://ub.uni-leipzig.de Leipzig University Library}
+ * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
+ */
+
+/*
  * OntoWiki deadline helper module
  *
  * A simple helper that looks for dates to come and displays them in a module
  *
  * @category OntoWiki
  * @package Extensions_Map
- * @author Norman Radkte <radtke@informatik.uni-leipzig.de>
- * @copyright Copyright (c) 2014, {@link http://aksw.org AKSW}
- * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
 class DeadlinehelperModule extends OntoWiki_Module
 {
