@@ -3,17 +3,21 @@
  * OntoWiki image helper module template
  */
 $translate = OntoWiki::getInstance()->translate;
+$urlBase = OntoWiki::getInstance()->getUrlBase();
 ?>
+<link rel="stylesheet" type="text/css" href="<?php echo ($urlBase . 'extensions/deadlinehelper/templates/deadlinehelper.css')?>">
 
+<div class="deadlinehelper">
 <?php if (isset($this->noResult)): ?>
     <?php echo($translate->translate("No upcoming dates")) ?>
 <?php endif ?>
 
 <?php if(isset ($this->properties)): ?>
     <?php foreach($this->properties as $property): ?>
-        <a href="<?php echo $property['subjectUrl'] ?>"> <?php echo $property['subjectTitle'] ?> </a> 
-            <?php echo $property['predicateTitle'] ?>
-            <?php echo $property['value'] ?>
-            </br>
+        <?php echo $property['value'] ?></br><?php echo $property['predicateTitle'] ?></br>
+        <a href="<?php echo $property['subjectUrl'] ?>"> <?php echo $property['subjectTitle'] ?></a></br>
+        </br>
     <?php endforeach; ?>
+
 <?php endif ?>
+</div>
