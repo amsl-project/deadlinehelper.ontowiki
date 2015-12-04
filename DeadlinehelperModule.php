@@ -28,6 +28,21 @@ class DeadlinehelperModule extends OntoWiki_Module
     }
 
     /**
+     * ordering function for usort used in getContent()
+     * orders first for date (oldest on top latest at bottom)
+     * orders after for title (A on top Z at bottom)
+     */
+    public function cmp($a, $b)
+    {
+        $int = strcmp($a["value"],$b["value"]);
+        if ($int == 0) {
+            return strcmp($a["subjectTitle"],$b["subjectTitle"]);
+        }else{
+            return $int;
+        }
+    }
+
+    /**
      * Get the map content
      */
     public function getContents()
@@ -115,6 +130,8 @@ class DeadlinehelperModule extends OntoWiki_Module
                 }
             }
 
+            usort($data, array('DeadlinehelperModule','cmp'));
+
             if ($found === true) {
                 $this->view->properties = $data;
             } else {
@@ -123,5 +140,4 @@ class DeadlinehelperModule extends OntoWiki_Module
         return $this->render('deadlinehelper');
         }
     }
-
 }
