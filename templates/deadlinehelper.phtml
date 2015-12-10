@@ -5,19 +5,37 @@
 $translate = OntoWiki::getInstance()->translate;
 $urlBase = OntoWiki::getInstance()->getUrlBase();
 ?>
-<link rel="stylesheet" type="text/css" href="<?php echo ($urlBase . 'extensions/deadlinehelper/templates/deadlinehelper.css')?>">
+<link rel="stylesheet" type="text/css"
+      href="<?php echo($urlBase . 'extensions/deadlinehelper/templates/deadlinehelper.css') ?>">
 
 <div class="deadlinehelper">
-<?php if (isset($this->noResult)): ?>
-    <?php echo($translate->translate("No upcoming dates")) ?>
-<?php endif ?>
 
-<?php if(isset ($this->properties)): ?>
-    <?php foreach($this->properties as $property): ?>
-        <?php echo $property['value'] ?></br><?php echo $property['predicateTitle'] ?></br>
-        <a href="<?php echo $property['subjectUrl'] ?>"> <?php echo $property['subjectTitle'] ?></a></br>
-        </br>
-    <?php endforeach; ?>
+    <?php if (isset ($this->properties)): ?>
+        <div id="accordion">
+            <?php foreach ($this->properties as $key => $value): ?>
+                <h4><?php echo $key ?><?php echo $this->amounts[$key] ?></h4>
+                <div class="hhh">
+                    <?php foreach($value as $data): ?>
 
-<?php endif ?>
+                        <?php echo $data['value'] ?></br>
+                        <a style="font-size: xx-small;" href="<?php echo $data['subjectUrl'] ?>"> <?php echo $data['subjectTitle'] ?></a>
+                        </br>
+                        </br>
+                <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+            <?php foreach ($this->emptytabs as $key): ?>
+                <h4><?php echo $key ?> 0</h4>
+                <div class="hhh">
+                    <?php echo($translate->translate("No upcoming dates")) ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <script>
+            $(function () {
+                $("#accordion").accordion();
+            });
+        </script>
+    <?php endif ?>
+
 </div>

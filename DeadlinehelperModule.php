@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2015, {@link http://ub.uni-leipzig.de Leipzig University Library}
  * @license http://opensource.org/licenses/gpl-license.php GNU General Public License (GPL)
  */
-
 /*
  * OntoWiki deadline helper module
  *
@@ -15,6 +14,7 @@
  * @category OntoWiki
  * @package Extensions_Map
  */
+
 class DeadlinehelperModule extends OntoWiki_Module
 {
     public function getTitle()
@@ -34,10 +34,10 @@ class DeadlinehelperModule extends OntoWiki_Module
      */
     public function cmp($a, $b)
     {
-        $int = strcmp($a["value"],$b["value"]);
+        $int = strcmp($a["value"], $b["value"]);
         if ($int == 0) {
-            return strcmp($a["subjectTitle"],$b["subjectTitle"]);
-        }else{
+            return strcmp($a["subjectTitle"], $b["subjectTitle"]);
+        } else {
             return $int;
         }
     }
@@ -85,20 +85,20 @@ class DeadlinehelperModule extends OntoWiki_Module
 
             // Write query
             $sparql = 'SELECT ?subject ?property ?value WHERE {' . PHP_EOL;
-            $sparql.= '?subject ?property ?value .' . PHP_EOL;
-            $sparql.= 'FILTER (' . PHP_EOL;
-            foreach($properties as $setup) {
-                if ($n >1) {
+            $sparql .= '?subject ?property ?value .' . PHP_EOL;
+            $sparql .= 'FILTER (' . PHP_EOL;
+            foreach ($properties as $setup) {
+                if ($n > 1) {
                     $sparql .= '|| ' . PHP_EOL;
                 }
-                $sparql.= '?property = <' . $setup->property . '> ' . PHP_EOL;
+                $sparql .= '?property = <' . $setup->property . '> ' . PHP_EOL;
                 $n++;
             }
-            $sparql.= ')' . PHP_EOL;
-            $sparql.= '}' . PHP_EOL;
-            $sparql.= 'ORDER BY ASC (?value)' . PHP_EOL;
+            $sparql .= ')' . PHP_EOL;
+            $sparql .= '}' . PHP_EOL;
+            $sparql .= 'ORDER BY ASC (?value)' . PHP_EOL;
 
-            $results  = $this->_owApp->selectedModel->sparqlQuery($sparql);
+            $results = $this->_owApp->selectedModel->sparqlQuery($sparql);
 
             if (empty($results)) {
                 $this->view->noResult = true;
@@ -106,13 +106,13 @@ class DeadlinehelperModule extends OntoWiki_Module
             }
 
             $data = array();
-            $url = new OntoWiki_Url(array('controller'=>'resource', 'action'=>'properties'));
+            $url = new OntoWiki_Url(array('controller' => 'resource', 'action' => 'properties'));
 
             $titleHelper = new OntoWiki_Model_TitleHelper($this->_owApp->selectedModel);
             $found = false;
 
             // keep future dates and drop past dates
-            foreach($results as &$property) {
+            foreach ($results as &$property) {
                 //$date = strtotime($property['value']);
                 $date = new DateTime($property['value']);
                 if ($date === null) {
@@ -122,22 +122,46 @@ class DeadlinehelperModule extends OntoWiki_Module
                 $url->setParam('r', $property['subject']);
 
                 if ($date > $minDate && $date < $maxDate) {
-                    $data[] = array ('subjectTitle'   => $titleHelper->getTitle($property['subject']),
-                                'subjectUrl'     => (string)$url,
-                                'predicateTitle' => $titleHelper->getTitle($property['property']),
-                                'value'          => $property['value']);
+                    $data[] = array('subjectTitle' => $titleHelper->getTitle($property['subject']),
+                        'subjectUrl' => (string)$url,
+                        'predicateTitle' => $titleHelper->getTitle($property['property']),
+                        'value' => $property['value']);
                     $found = true;
                 }
             }
+            usort($data, array('DeadlinehelperModule', 'cmp'));
+            
+            $newData = array();
+            $tabnames = array();
+            $amounts = array();
+            foreach ($properties as $prop) {
+                if ($prop->property != 'http://example.org/remindeDate') {
+                    $tabnames[] = $titleHelper->getTitle($prop->property);
+                }
+            }
 
-            usort($data, array('DeadlinehelperModule','cmp'));
+            foreach ($tabnames as $prop) {
+                $amounts[$prop] = 0;
+            }
+
+            foreach ($data as $part) {
+                $name3 = $part['predicateTitle'];
+                $newData[$name3][] = $part;
+                $amounts[$name3] = $amounts[$name3] + 1;
+                if (in_array($name3, $tabnames)) {
+                    unset($tabnames[array_search($name3, $tabnames)]);
+                }
+            }
 
             if ($found === true) {
-                $this->view->properties = $data;
+                $this->view->properties = $newData;
+                $this->view->emptytabs = $tabnames;
+                $this->view->amounts = $amounts;
             } else {
                 $this->view->noResult = true;
             }
-        return $this->render('deadlinehelper');
+            return $this->render('deadlinehelper');
         }
     }
 }
+
