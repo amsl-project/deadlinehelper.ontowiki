@@ -146,12 +146,14 @@ class DeadlinehelperModule extends OntoWiki_Module
 
             foreach ($data as $part) {
                 $name3 = $part['predicateTitle'];
-                $newData[$name3][] = $part;
+                $newData[$name3][$part['value']][] = $part;
                 $amounts[$name3] = $amounts[$name3] + 1;
                 if (in_array($name3, $tabnames)) {
                     unset($tabnames[array_search($name3, $tabnames)]);
                 }
             }
+
+
 
             if ($found === true) {
                 $this->view->properties = $newData;

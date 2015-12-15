@@ -12,20 +12,28 @@ $urlBase = OntoWiki::getInstance()->getUrlBase();
 
     <?php if (isset ($this->properties)): ?>
         <div id="accordion">
-            <?php foreach ($this->properties as $key => $value): ?>
-                <h4><?php echo $key ?><?php echo $this->amounts[$key] ?></h4>
+            <!-- Tabnames of accordion -->
+            <?php foreach ($this->properties as $tabname => $dateblocks): ?>
+                <h4><?php echo $tabname ?> <?php echo $this->amounts[$tabname] ?></h4>
                 <div class="hhh">
-                    <?php foreach($value as $data): ?>
 
-                        <?php echo $data['value'] ?></br>
-                        <a style="font-size: xx-small;" href="<?php echo $data['subjectUrl'] ?>"> <?php echo $data['subjectTitle'] ?></a>
-                        </br>
-                        </br>
-                <?php endforeach; ?>
+                    <!-- the dates for which entries are available -->
+                    <?php foreach($dateblocks as $dateKey => $datablock): ?>
+                        <div style="font-weight: bold;"><?php echo $dateKey ?>:</div>
+
+                        <!-- the actual entry with name as link -->
+                        <?php foreach($datablock as $data): ?>
+                            <p style="line-height: 2ex; font-size: 12px;">
+                            <a  href="<?php echo $data['subjectUrl'] ?>"> <?php echo $data['subjectTitle'] ?></a>
+                            </p>
+                            <div style="height: 6px;"></div>
+                        <?php endforeach; ?>
+
+                    <?php endforeach; ?>
                 </div>
             <?php endforeach; ?>
-            <?php foreach ($this->emptytabs as $key): ?>
-                <h4><?php echo $key ?> 0</h4>
+            <?php foreach ($this->emptytabs as $tabname): ?>
+                <h4><?php echo $tabname ?> 0</h4>
                 <div class="hhh">
                     <?php echo($translate->translate("No upcoming dates")) ?>
                 </div>

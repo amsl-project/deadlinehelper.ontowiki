@@ -1,5 +1,4 @@
 .deadlinehelper {
-    max-height: 400px;
     position:relative;
     left: -10px;
     width:calc(100% + 19px);
